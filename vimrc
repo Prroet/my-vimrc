@@ -75,7 +75,13 @@ noremap <F5> :!./%
 " build Dockerfile e.g. Dockerfile.example will build exaple:latest
 noremap <F6> :!docker build --file % --tag %:e .
 
-noremap <F12> :botright+10split+terminal
+function Terminal_split()
+  set splitbelow
+  :15split+terminal
+  set nosplitbelow
+endfunction
+
+noremap <F12> :call Terminal_split()<CR>
 
 " Overwrites Register pasting functionality in command mode!
 " cnoremap <C-r> YcmCompleter RefactorRename
