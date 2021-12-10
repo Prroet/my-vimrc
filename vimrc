@@ -31,10 +31,18 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-let g:netrw_winsize = 25
+" make sure netrw is always 25 width
+
+function SetupExplorer()
+  :Vexplore
+  :vertical 0resize30
+  :wincmd h
+  :set winfixwidth
+endfunction
+
 augroup ProjectDrawer
   autocmd!
-  autocmd VimEnter * :Vexplore
+  autocmd VimEnter * :call SetupExplorer()
 augroup END
 
 " enable matchit package
@@ -52,12 +60,19 @@ command DestroyTags !rm tags
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
-call plug#begin(stdpath('data') . '/plugged')
+if has('nvim')
+  call plug#begin(stdpath('data') . '/plugged')
+else
+  call plug#begin('~/.vim/plugged')
+endif
 " Initialize plugin system
 "
 Plug 'https://github.com/ycm-core/YouCompleteMe.git', { 'do': './install.py'}
 " Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop', 'do': 'git submodule update --init --recursive' }
 Plug 'https://github.com/airblade/vim-gitgutter.git'
+Plug 'https://github.com/hashivim/vim-packer.git'
+Plug 'https://github.com/hashivim/vim-terraform'
+" Plug 'https://github.com/pangloss/vim-javascript'
 
 call plug#end()
 
@@ -75,7 +90,14 @@ noremap <F5> :!./%
 " build Dockerfile e.g. Dockerfile.example will build exaple:latest
 noremap <F6> :!docker build --file % --tag %:e .
 
-noremap <F12> :botright+10split+terminal
+function OpenTerminal()
+  " TODO toggle terminal
+  20split+terminal
+  set winfixheight
+endfunction
+
+set splitbelow
+noremap <F12> :call OpenTerminal()<CR>
 
 " Overwrites Register pasting functionality in command mode!
 " cnoremap <C-r> YcmCompleter RefactorRename
@@ -84,3 +106,20 @@ noremap <F12> :botright+10split+terminal
 " https://stackoverflow.com/questions/48935451/how-do-i-get-vim-to-highlight-trailing-whitespaces-while-using-vim-at-the-same-t
 highlight RedundantSpaces ctermbg=red guibg=red
 match RedundantSpaces /\s\+$/
+
+
+" Status Line {
+"        set laststatus=2                             " always show statusbar
+        set statusline=
+        set statusline=
+        set statusline+=%-10.3n\                     " buffer number
+        set statusline+=%f\                          " filename
+        set statusline+=%h%m%r%w                     " status flags
+        set statusline+=\[%{strlen(&ft)?&ft:'none'}] " file type
+        set statusline+=%=                           " right align remainder
+        set statusline+=HexVal\ 
+        set statusline+=0x%-8B                       " character value
+        set statusline+=Pos\ 
+        set statusline+=%-14(%l,%c%V%)               " line, character
+        set statusline+=%<%P                         " file position
+"}
