@@ -98,6 +98,8 @@ endfunction
 
 set splitbelow
 noremap <F12> :call OpenTerminal()<CR>
+" TODO send export EDITOR=nvim -u NORC via term_sendkeys(buffer_id, keys_to_send)
+
 
 " Overwrites Register pasting functionality in command mode!
 " cnoremap <C-r> YcmCompleter RefactorRename
