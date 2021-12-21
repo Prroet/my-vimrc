@@ -18,7 +18,6 @@ set shiftwidth=2
 retab
 set expandtab
 " end of tab settings
-
 " set list if we want to see everything
 set listchars=tab:»»,space:·,eol:$
 " line numbers.
@@ -93,6 +92,7 @@ noremap <F6> :!docker build --file % --tag %:e .
 function OpenTerminal()
   " TODO toggle terminal
   20split+terminal
+  call chansend(bufnr(), 'export EDITOR="nvim -u NORC"')
   set winfixheight
 endfunction
 
