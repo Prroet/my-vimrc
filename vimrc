@@ -30,31 +30,15 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
-" make sure netrw is always 25 width
+" c-tab
+let g:netrw_usetab = 1
+let g:netrw_winsize = 10
 
-function SetupExplorer()
-  :Vexplore
-  :vertical 0resize30
-  :wincmd h
-  :set winfixwidth
-endfunction
-
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :call SetupExplorer()
-augroup END
-
-" enable matchit package
+" enable matchit package for braces matching
 packadd! matchit
 
 command MakeTags silent !ctags -R .
 command DestroyTags !rm tags
-" tagging
-"augroup vimrc_tag
-"  autocmd VimEnter * MakeTags
-"  autocmd VimLeave * DestroyTags
-"augroup END
-"
 
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
@@ -68,20 +52,12 @@ endif
 "
 Plug 'https://github.com/ycm-core/YouCompleteMe.git', { 'do': './install.py'}
 " Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop', 'do': 'git submodule update --init --recursive' }
-Plug 'https://github.com/airblade/vim-gitgutter.git'
+" Plug 'https://github.com/airblade/vim-gitgutter.git'
 Plug 'https://github.com/hashivim/vim-packer.git'
 Plug 'https://github.com/hashivim/vim-terraform'
 " Plug 'https://github.com/pangloss/vim-javascript'
 
 call plug#end()
-
-"let g:ycm_python_interpreter_path = ''
-"let g:ycm_python_sys_path = []
-"let g:ycm_extra_conf_vim_data = [
-"  \  'g:ycm_python_interpreter_path',
-"  \  'g:ycm_python_sys_path'
-"  \]
-"let g:ycm_global_ycm_extra_conf = '~/global_extra_conf.py'
 
 " Keybindings
 " Command Mode
@@ -89,16 +65,36 @@ noremap <F5> :!./%
 " build Dockerfile e.g. Dockerfile.example will build exaple:latest
 noremap <F6> :!docker build --file % --tag %:e .
 
-function OpenTerminal()
-  " TODO toggle terminal
+autocmd TermOpen * startinsert
+function CreateTerminal()
+  set splitbelow
   20split+terminal
-  call chansend(bufnr(), 'export EDITOR="nvim -u NORC"')
+  ":call chansend(bufnr("$"), 'export EDITOR="nvim -u NORC"')
   set winfixheight
 endfunction
 
-set splitbelow
-noremap <F12> :call OpenTerminal()<CR>
-" TODO send export EDITOR=nvim -u NORC via term_sendkeys(buffer_id, keys_to_send)
+function ToggleTerminal()
+  " Check for an active terminal
+  " get first terminal id
+  " get window height
+  " if height == 1 make larger
+  " else make 1
+  " resize to 1
+  let l:terminal_winnr=uniq(map(filter(getwininfo(), 'v:val.terminal'), 'v:val.winnr'))
+  if len(l:terminal_winnr) == 0
+    call CreateTerminal()
+  else
+    let l:new_term_height=1
+    if winheight(l:terminal_winnr[0]) == 1
+      let l:new_term_height=20
+    endif
+    let l:resize_cmd = l:terminal_winnr[0] . "resize" . l:new_term_height
+    echo "Resize command: " + l:resize_cmd
+    execute l:resize_cmd
+  endif
+endfunction
+
+noremap <F12> :call ToggleTerminal()<CR>
 
 
 " Overwrites Register pasting functionality in command mode!
@@ -112,16 +108,16 @@ match RedundantSpaces /\s\+$/
 
 " Status Line {
 "        set laststatus=2                             " always show statusbar
-        set statusline=
-        set statusline=
-        set statusline+=%-10.3n\                     " buffer number
-        set statusline+=%f\                          " filename
-        set statusline+=%h%m%r%w                     " status flags
-        set statusline+=\[%{strlen(&ft)?&ft:'none'}] " file type
-        set statusline+=%=                           " right align remainder
-        set statusline+=HexVal\ 
-        set statusline+=0x%-8B                       " character value
-        set statusline+=Pos\ 
-        set statusline+=%-14(%l,%c%V%)               " line, character
-        set statusline+=%<%P                         " file position
+set statusline=
+set statusline=
+set statusline+=%-10.3n\                     " buffer number
+set statusline+=%f\                          " filename
+set statusline+=%h%m%r%w                     " status flags
+set statusline+=\[%{strlen(&ft)?&ft:'none'}] " file type
+set statusline+=%=                           " right align remainder
+set statusline+=HexVal\ 
+set statusline+=0x%-8B                       " character value
+set statusline+=Pos\ 
+set statusline+=%-14(%l,%c%V%)               " line, character
+set statusline+=%<%P                         " file position
 "}
