@@ -80,7 +80,7 @@ function ToggleTerminal()
   " if height == 1 make larger
   " else make 1
   " resize to 1
-  let l:terminal_winnr=uniq(map(filter(getwininfo(), 'v:val.terminal'), 'v:val.winnr'))
+  let l:terminal_winnr=uniq(map(filter(getwininfo(), 'v:val.terminal && v:val.tabnr == '. tabpagenr()), 'v:val.winnr'))
   if len(l:terminal_winnr) == 0
     call CreateTerminal()
   else
