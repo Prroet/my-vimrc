@@ -1,65 +1,53 @@
 TerminalToggle = {}
 
 local vim = vim
+local api = vim.api
 
-local function CreateTerminal(tabpage_number)
-  local old_splitbelow = vim.go.splitbelow
-  vim.go.splitbelow = true
-  vim.cmd('20split+terminal')
-  vim.wo.winfixheight = true
-  vim.go.splitbelow = old_splitbelow
-  TerminalToggle[tabpage_number].buffer = vim.api.nvim_get_current_buf()
-  TerminalToggle[tabpage_number].window = vim.api.nvim_get_current_win()
-  return { buffer = TerminalToggle[tabpage_number].buffer, window = TerminalToggle[tabpage_number].window }
+local function CreateTerminal()
+  local old = vim.o.splitbelow
+  vim.o.splitbelow = true
+  api.nvim_exec("20split+terminal", true)
+  vim.o.splitbelow = old
+  local win = api.nvim_get_current_win()
+  local buf = api.nvim_get_current_buf()
+  return { window = win, buffer = buf }
 end
 
-local function OpenWindow(tabpage_number)
-  local old_splitbelow = vim.go.splitbelow
-  vim.go.splitbelow = true
-  vim.cmd('20split')
-  vim.wo.winfixheight = true
-  vim.go.splitbelow = old_splitbelow
-  TerminalToggle[tabpage_number].window = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(TerminalToggle[tabpage_number].window, TerminalToggle[tabpage_number].buffer)
-  return TerminalToggle[tabpage_number].window
-end
-
-local function CloseWindow(tabpage_number)
-  local window = TerminalToggle[tabpage_number].window
-  vim.api.nvim_win_close(window)
+local function OpenWindow(buffer)
+  local old = vim.o.splitbelow
+  vim.o.splitbelow = true
+  vim.cmd("20split+buffer"..buffer)
+  vim.o.splitbelow = old
+  return api.nvim_get_current_win()
 end
 
 function TerminalToggle.toggle()
-  local tabpage = vim.api.nvim_get_current_tabpage()
-  local tabpage_number = vim.api.nvim_tabpage_get_number(tabpage)
-  local buffer = nil
-  local window = nil
-  -- there was a terminal
+  local tabpage = api.nvim_get_current_tabpage()
+  local tabpage_number = api.nvim_tabpage_get_number(tabpage)
+  -- check if there is a valid buffer
+  -- then check if there is a valid window
+  -- if no valid buffer -> there is no terminal
+  -- if valid buffer but no window -> the window is closed
+  -- print("TerminalToggle[".. tabpage_number .. "]=".. "nil" or TerminalToggle[tabpage_number] .. "\n")
   if TerminalToggle[tabpage_number] ~= nil then
-    buffer = TerminalToggle[tabpage_number].buffer
-    window = TerminalToggle[tabpage_number].window
+    -- print("Tabpage exists. Checking if buffer is loaded")
+    local buffer = TerminalToggle[tabpage_number].buffer
+    local window = TerminalToggle[tabpage_number].window
+    if api.nvim_buf_is_loaded(buffer) then
+      if api.nvim_win_is_valid(window) then
+        print("Closing Window")
+        api.nvim_win_close(window, false)
+      else
+        TerminalToggle[tabpage_number].window = OpenWindow(buffer)
+        window = TerminalToggle[tabpage_number].window
+      end
+    else
+      -- print("Buffer: " .. buffer .. " is not loaded!")
+      -- print("Creating new Terminal")
+      TerminalToggle[tabpage_number] = CreateTerminal()
+    end
   else
-    -- no terminal before
-    TerminalToggle[tabpage_number] = {}
-  end
-  -- no terminal before
-  if buffer == nil then
-    vim.cmd('echo "Buffer is nil creating terminal"')
-    local win_and_buf = CreateTerminal(tabpage_number)
-    buffer = win_and_buf.buffer
-    window = win_and_buf.window
-  end
-
-  -- terminal was closed
-  if not vim.api.nvim_buf_is_valid(buffer) then
-    local win_and_buf = CreateTerminal(tabpage_number)
-    buffer = win_and_buf.buffer
-    window = win_and_buf.window
-  end
-
-  if not vim.api.nvim_win_is_valid(window) then
-    window = OpenWindow(tabpage_number)
-  else
-    vim.api.nvim_win_close(window, false)
+    print("Creating terminal.")
+    TerminalToggle[tabpage_number] = CreateTerminal()
   end
 end

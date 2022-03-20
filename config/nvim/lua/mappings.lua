@@ -1,4 +1,4 @@
-require('lua/tools')
+require('tools')
 
 local vim = vim
 local options = { noremap = true }
