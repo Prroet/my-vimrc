@@ -4,10 +4,12 @@ Only compatible with latest stable neovim release!
 
 ## Prerequisites
 
+- neovim
+- [pyright](https://github.com/microsoft/pyright)
 - [packer.nvim](https://github.com/wbthomason/packer.nvim)
   - packer.nvim is not [packer](https://www.packer.io/)!
-- neovim
-
+- [Terraform Language Server](https://github.com/hashicorp/terraform-ls.git)
+- [Bash Language Server](https://github.com/bash-lsp/bash-language-server)
 
 ## Installation
 
@@ -17,3 +19,4 @@ Only compatible with latest stable neovim release!
 ### Features
 
 - Terminal Toggle (Hit F12 Key)
+- completion via [language server protocoll](https://microsoft.github.io/language-server-protocol/) for python, terraform and bash (more will probably come)

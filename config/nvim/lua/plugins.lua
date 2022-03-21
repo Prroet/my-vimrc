@@ -6,4 +6,5 @@ return require('packer').startup(function()
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/nvim-cmp'
   use 'altercation/vim-colors-solarized'
+  use 'hashivim/vim-terraform'
 end)
