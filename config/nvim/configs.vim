@@ -43,4 +43,4 @@ highlight RedundantSpaces ctermbg=red guibg=red
 match RedundantSpaces /\s\+$/
 
 colorscheme solarized
-set background=light
+set background=dark
