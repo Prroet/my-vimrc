@@ -6,7 +6,7 @@ local api = vim.api
 local function CreateTerminal()
   local old = vim.o.splitbelow
   vim.o.splitbelow = true
-  api.nvim_exec("20split+terminal", true)
+  api.nvim_exec("botright+20split+terminal", true)
   vim.o.splitbelow = old
   local win = api.nvim_get_current_win()
   local buf = api.nvim_get_current_buf()
@@ -16,7 +16,7 @@ end
 local function OpenWindow(buffer)
   local old = vim.o.splitbelow
   vim.o.splitbelow = true
-  vim.cmd("20split+buffer"..buffer)
+  vim.cmd("botright+20split+buffer"..buffer)
   vim.o.splitbelow = old
   return api.nvim_get_current_win()
 end
