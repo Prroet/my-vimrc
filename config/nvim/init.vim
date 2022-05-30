@@ -6,6 +6,8 @@ source ~/.config/nvim/keybindings.vim
 lua << EOF
 require('mappings')
 require('plugins')
+require('nvim-cmp-config')
+require('tools')
 require('lspconfig').pyright.setup{}
 require('lspconfig').sumneko_lua.setup{}
 require('lspconfig').bashls.setup{}
@@ -21,5 +23,7 @@ require('lspconfig').rls.setup{
 require('lspconfig').clangd.setup{}
 }
 EOF
+
+set guifont=Hack\ Nerd\ Font\ Mono
 
 autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
