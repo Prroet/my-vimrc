@@ -1,6 +1,6 @@
 # my-vimrc
 
-Only compatible with latest stable neovim release!
+Only compatible with latest neovim unstable!
 
 ## Prerequisites
 
