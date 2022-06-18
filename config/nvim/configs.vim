@@ -3,9 +3,6 @@ set nocompatible
 syntax enable
 filetype on
 
-" Default Vim completion
-set omnifunc=syntaxcomplete#Complete
-
 " path for finding files
 set path+=**
 " menu for finding
