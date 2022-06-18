@@ -9,4 +9,6 @@ require('plugins')
 require('lspconfig-configuration')
 EOF
 
+set guifont=Hack\ Nerd\ Font\ Mono
+
 autocmd BufWritePre *.tf lua vim.lsp.buf.formatting_sync()
