@@ -20,9 +20,6 @@ set listchars=tab:»»,space:·,eol:$
 " line numbers.
 set number relativenumber
 
-" to autocomplete words with hyphen
-set iskeyword+=-
-
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
