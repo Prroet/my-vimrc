@@ -36,5 +36,5 @@ let g:netrw_winsize = 10
 highlight RedundantSpaces ctermbg=red guibg=red
 match RedundantSpaces /\s\+$/
 
-colorscheme solarized
-set background=dark
+colorscheme default
+" set background=dark

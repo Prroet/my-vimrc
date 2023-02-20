@@ -35,7 +35,8 @@ local servers = {
   'pyright',
   'sumneko_lua',
   'bashls',
-  'terraformls'}
+  'terraformls',
+  'gopls'}
 
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
