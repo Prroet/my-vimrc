@@ -1,6 +1,4 @@
-set nocompatible
 " syntax highlighting
-syntax enable
 filetype on
 
 " path for finding files
