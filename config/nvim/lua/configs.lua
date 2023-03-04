@@ -25,7 +25,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 local function netrw()
-  local var netrw_settings = {
+  local netrw_settings = {
     banner = {
       no = 0
     },
@@ -47,6 +47,14 @@ local function netrw()
 end
 
 netrw()
+
+local function neovide()
+  if vim.g.neovide == true then
+    vim.g.neovide_scale_factor = 0.75
+  end
+end
+
+neovide()
 
 vim.cmd([[   
   " highlight trailing spaces red
