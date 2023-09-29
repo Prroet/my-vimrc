@@ -59,7 +59,7 @@ local servers = {
   pyright = {
     settings = {}
   },
-  rnix-lsp = {
+  rnix = {
     settings = {}
   },
   bashls = {
