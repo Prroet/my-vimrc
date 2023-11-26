@@ -75,6 +75,9 @@ local servers = {
     settings = {
       filetypes = { "yaml", "yml" }
     }
+  },
+  clangd = {
+    settings = {}
   }
 }
 
